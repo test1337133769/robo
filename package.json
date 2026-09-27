@@ -1,0 +1,20 @@
+{
+  "name": "arcade-gamestore",
+  "version": "1.0.0",
+  "description": "Arcade Gamestore - Official Roblox Robux & Gift Code Store Bangladesh",
+  "main": "index.html",
+  "scripts": {
+    "start": "npx -y serve . -p 3000",
+    "dev": "npx -y serve . -p 3000"
+  },
+  "keywords": [
+    "roblox",
+    "robux",
+    "bangladesh",
+    "arcade-gamestore",
+    "bkash",
+    "nagad"
+  ],
+  "author": "Arcade Gamestore",
+  "license": "MIT"
+}
