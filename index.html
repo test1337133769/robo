@@ -2405,12 +2405,16 @@ body {
           <div class="calc-input-group">
             <label for="custom-robux-input">Enter Amount of Robux (Min 500):</label>
             <div class="calc-input-wrapper" style="gap: 8px;">
-              <button type="button" class="calc-stepper-btn" onclick="stepCustomRobux(-500)" aria-label="Decrease 500 Robux">-500</button>
+              <button type="button" class="calc-stepper-btn" onclick="stepCustomRobux(-500)" aria-label="Decrease 500 Robux" title="Decrease by 500">-500</button>
               <div style="position: relative; flex: 1; display: flex; align-items: center;">
-                <input type="number" id="custom-robux-input" value="500" min="500" max="25000" step="500" inputmode="numeric" style="padding-right: 68px;">
-                <span class="calc-addon">ROBUX</span>
+                <input type="text" id="custom-robux-input" value="500" readonly style="padding-right: 68px; cursor: default; user-select: none; font-weight: 800; font-size: 1.3rem; letter-spacing: 0.05em; background: rgba(0, 0, 0, 0.45); border-color: rgba(0, 242, 254, 0.35);">
+                <span class="calc-addon" style="pointer-events: none;">ROBUX</span>
               </div>
-              <button type="button" class="calc-stepper-btn" onclick="stepCustomRobux(500)" aria-label="Increase 500 Robux">+500</button>
+              <button type="button" class="calc-stepper-btn" onclick="stepCustomRobux(500)" aria-label="Increase 500 Robux" title="Increase by 500">+500</button>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 6px; font-size: 0.76rem; color: var(--text-dim);">
+              <span>⚡ Strictly increases by 500 Robux</span>
+              <button type="button" onclick="resetCustomRobux()" style="background: none; border: none; color: var(--accent-cyan); cursor: pointer; text-decoration: underline; font-size: 0.76rem;">Reset to 500</button>
             </div>
 
             <div class="calc-slider-wrapper">
@@ -3231,13 +3235,23 @@ window.stepCustomRobux = function(delta) {
   let current = parseInt(state.customRobux) || 500;
   let next = current + delta;
   if (next < 500) next = 500;
+  if (next > 25000) next = 25000;
   next = Math.round(next / 500) * 500;
-  if (next < 500) next = 500;
   state.customRobux = next;
   const calcInput = document.getElementById('custom-robux-input');
   const calcSlider = document.getElementById('custom-robux-slider');
-  if (calcInput) calcInput.value = next;
+  if (calcInput) calcInput.value = next.toLocaleString();
   if (calcSlider) calcSlider.value = Math.min(next, 20000);
+  updateCalcPreview();
+};
+
+window.resetCustomRobux = function() {
+  if (typeof sfx !== 'undefined') sfx.play('click');
+  state.customRobux = 500;
+  const calcInput = document.getElementById('custom-robux-input');
+  const calcSlider = document.getElementById('custom-robux-slider');
+  if (calcInput) calcInput.value = '500';
+  if (calcSlider) calcSlider.value = 500;
   updateCalcPreview();
 };
 
@@ -3541,11 +3555,15 @@ function setupEventListeners() {
   const chips = document.querySelectorAll('.chip-btn');
   chips.forEach(chip => {
     chip.addEventListener('click', () => {
-      sfx.play('click');
+      if (typeof sfx !== 'undefined') sfx.play('click');
       const amt = parseInt(chip.dataset.amount);
-      if (calcInput) calcInput.value = amt;
-      if (calcSlider) calcSlider.value = Math.min(amt, 20000);
-      state.customRobux = amt;
+      let current = parseInt(state.customRobux) || 500;
+      let next = current + amt;
+      if (next > 25000) next = 25000;
+      next = Math.round(next / 500) * 500;
+      state.customRobux = next;
+      if (calcInput) calcInput.value = next.toLocaleString();
+      if (calcSlider) calcSlider.value = Math.min(next, 20000);
       updateCalcPreview();
     });
   });
