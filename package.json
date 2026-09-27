@@ -4,8 +4,9 @@
   "description": "Arcade Gamestore - Official Roblox Robux & Gift Code Store Bangladesh",
   "main": "index.html",
   "scripts": {
-    "start": "npx -y serve . -p 3000",
-    "dev": "npx -y serve . -p 3000"
+    "build": "node build.js",
+    "start": "node server.js",
+    "dev": "node server.js"
   },
   "keywords": [
     "roblox",
